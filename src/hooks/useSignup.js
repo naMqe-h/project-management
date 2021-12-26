@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { auth } from '../firebase/config'
+import { auth, storage } from '../firebase/config'
 import { useAuthContext } from "./useAuthContext"
 
 export const useSignup = () => {
@@ -8,7 +8,7 @@ export const useSignup = () => {
     const [isPending, setIsPending] = useState(false)
     const { dispatch } = useAuthContext()
 
-    const signup = async (email, password, displayName) => {
+    const signup = async (email, password, displayName, thumbnail) => {
         setError(null)
         setIsPending(true)
 
@@ -19,7 +19,11 @@ export const useSignup = () => {
                 throw new Error('Could not complete signup')
             }
 
-            await res.user.updateProfile({ displayName })
+            const uploadPath = `thumbnails/${res.user.uid}/${thumbnail.name}`
+            const img = await storage.ref(uploadPath).put(thumbnail)
+            const photoURL = await img.ref.getDownloadURL()
+
+            await res.user.updateProfile({ displayName, photoURL })
 
             dispatch({ type: 'LOGIN', payload: res.user })
 
@@ -32,7 +36,6 @@ export const useSignup = () => {
             if(!isCancelled) {
                 setIsPending(false)
                 setError(err.message)
-                console.log(err.message)
             }
         }
     }
