@@ -24,3 +24,10 @@ yarn-error.log*
 
 # env
 .env
+
+#firebase
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
+storage.rules
