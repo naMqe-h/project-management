@@ -5,4 +5,5 @@
 .App .container {
   flex-grow: 1;
   padding: 0 60px;
+  overflow: auto;
 }
