@@ -67,6 +67,7 @@ input, textarea {
 
 textarea {
   min-height: 160px;
+  resize: none;
 }
 
 .error {
