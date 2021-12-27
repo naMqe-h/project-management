@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { auth, storage } from '../firebase/config'
+import { auth, storage, db } from '../firebase/config'
 import { useAuthContext } from "./useAuthContext"
 
 export const useSignup = () => {
@@ -24,6 +24,11 @@ export const useSignup = () => {
             const photoURL = await img.ref.getDownloadURL()
 
             await res.user.updateProfile({ displayName, photoURL })
+            await db.collection('users').doc(res.user.uid).set({
+                online: true,
+                displayName,
+                photoURL
+            })
 
             dispatch({ type: 'LOGIN', payload: res.user })
 
